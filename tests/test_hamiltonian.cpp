@@ -11,11 +11,11 @@
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cerr << "Usage: test_hamiltonian <file_with_graph6> [--method Bitset or Matrix (default)] [--n: number_of_tests]\n";
+        std::cerr << "Usage: test_hamiltonian <file_with_graph6> [--method Bitset (default) or Matrix] [--n: number_of_tests]\n";
         return 2;
     }
     int upper_bound = 200;
-    bool methodIsMatrix=true;
+    bool methodIsMatrix=false;
     for (int i = 2; i < argc; ++i)
     {
         std::string arg = argv[i];
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
         }
         if (arg == "--method" && i+1<argc){ 
             std::string arg2 = argv[i+1];
-            if (arg2 == "Bitset") methodIsMatrix=false;
+            if (arg2 == "Matrix") methodIsMatrix=true;
         }
     }
     std::cout << "using method Matrix?: "<< methodIsMatrix << std::endl;

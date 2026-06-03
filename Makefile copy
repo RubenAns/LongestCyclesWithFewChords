@@ -1,0 +1,90 @@
+CXX ?= g++
+MODE ?= release
+
+SRCDIR ?= src
+BUILDDIR ?= build
+
+ifeq ($(MODE),debug)
+CXXFLAGS ?= -std=c++17 -g  -Wall -Wextra -Iinclude
+else
+CXXFLAGS ?= -std=c++17  -Wall -Wextra -Iinclude -g -O3 -DNDEBUG
+endif
+
+ifeq ($(OS),Windows_NT)
+RM = del /Q /F
+MKDIR = if not exist "$(BUILDDIR)" mkdir "$(BUILDDIR)"
+EXE_EXT = .exe
+else
+RM = rm -f
+MKDIR = mkdir -p "$(BUILDDIR)"
+EXE_EXT =
+endif
+
+.PHONY: all clean help
+all:  ComputeLongestCycleBitset_better  find_min_chord_cycle$(EXE_EXT) find_min_chord_cycle_with_ham_filter$(EXE_EXT)
+
+# Source lists (in src/)
+SRCS_MATRIX = $(SRCDIR)/ComputeLongestCycleMatrix.cpp $(SRCDIR)/ReadGraphMatrix.cpp
+SRCS_BITSET = $(SRCDIR)/ComputeLongestCycleBitset.cpp $(SRCDIR)/ReadGraphBitset.cpp
+
+# Derived object lists in build/
+OBJS_MATRIX = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SRCS_MATRIX))
+OBJS_BITSET = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SRCS_BITSET))
+
+
+
+
+# Ensure build directory exists then compile object files into build/
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BUILDDIR):
+	@$(MKDIR)
+
+
+# Find minimum chord cycle
+find_min_chord_cycle$(EXE_EXT): $(SRCDIR)/find_min_chord_cycle.cpp $(BUILDDIR)/ComputeLongestCycleWithFewestChords.o $(BUILDDIR)/CountChordsBitset.o $(BUILDDIR)/ReadGraphBitset.o
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+find_min_chord_cycle_with_ham_filter$(EXE_EXT): $(SRCDIR)/find_min_chord_cycle_with_ham_filter.cpp $(BUILDDIR)/ComputeLongestCycleWithFewestChords_with_ham_filter.o $(BUILDDIR)/CountChordsBitset.o $(BUILDDIR)/ReadGraphBitset.o
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+# Convenience targets to build individual test helpers
+readGraphMatrix: $(SRCDIR)/ReadGraphMatrix.cpp
+	$(CXX) $(CXXFLAGS) -DTEST_HELPER -o $@ $^
+
+readGraphBitset: $(SRCDIR)/ReadGraphBitset.cpp
+	$(CXX) $(CXXFLAGS) -DTEST_HELPER -o $@ $^
+
+ComputeLongestCycleMatrix: $(SRCDIR)/ComputeLongestCycleMatrix.cpp
+	$(CXX) $(CXXFLAGS) -DTEST_HELPER -o $@ $^
+
+ComputeLongestCycleBitset: $(SRCDIR)/ComputeLongestCycleBitset.cpp
+	$(CXX) $(CXXFLAGS) -DTEST_HELPER -o $@ $^
+
+ComputeLongestCycleBitset_better: $(SRCDIR)/ComputeLongestCycleBitset_better.cpp
+	$(CXX) $(CXXFLAGS) -DTEST_HELPER -o ./src/$@ $^
+
+ComputeLongestCycleBitset_better_copy: $(SRCDIR)/ComputeLongestCycleBitset_better_copy.cpp $(BUILDDIR)/CountChordsBitset.o
+	$(CXX) $(CXXFLAGS) -DTEST_HELPER -o ./src/$@ $^
+
+
+# Clean
+clean:
+	$(RM) "$(BUILDDIR)\*.o" $(BUILDDIR)\*$(EXE_EXT)
+
+help:
+	@echo "Usage: make [target] [MODE=release|debug]"
+	@echo
+	@echo "Targets:"
+	@echo "  all (default)       - build main and mainB"
+	@echo "  readGraphMatrix     - build the matrix reader test binary (DTEST_HELPER)"
+	@echo "  readGraphBitset     - build the bitset reader test binary (DTEST_HELPER)"
+	@echo "  ComputeLongestCycleMatrix - build cycle matrix test binary"
+	@echo "  ComputeLongestCycleBitset - build cycle bitset test binary"
+	@echo "  find_min_chord_cycle - build longest cycle with fewest chords finder"
+	@echo "  clean               - remove artifacts"
+	@echo
+	@echo "Examples:"
+	@echo "  make               # build optimized release binaries"
+	@echo "  make MODE=debug    # build with debug symbols"

@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
                 bitset graph[64];
                 std::cout << "\"" << line << "end\"" << std::endl;
                 loadGraphBitset(line ,n, graph);
-                cycle_length = computeLongestCycleAndCountThem(graph, n, cyc2);
+                computeLongestCycleAndCountThem(graph, n, cyc2, cycle_length);
             }
              // cycle contains repeated start at end in this impl
             if (cycle_length != n) {

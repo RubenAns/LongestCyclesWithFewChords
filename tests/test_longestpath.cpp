@@ -72,7 +72,7 @@ int main(int argc, char **argv)
                 //     std::cout<<graph[i] << ", ";
                 // }
                 // std::cout<<std::endl;
-                cycle_length = computeLongestCycleAndCountThem(graph, n, cyc2);
+                computeLongestCycleAndCountThem(graph, n, cyc2, cycle_length);
             }
             if (cycle_length != expected)
             {

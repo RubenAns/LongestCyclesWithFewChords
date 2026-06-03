@@ -29,7 +29,7 @@ void initializeLongestCycle(bitset graph[], const int n);
 
 
 
-int computeLongestCycleAndCountThem(bitset* graph, const int n, int* longestCycleResult) {
+int computeLongestCycleAndCountThem(bitset* graph, const int n, int* longestCycleResult, int& length) {
 	// std::cout<<"input = " << graph[0]<<", "<< graph[1] <<", n= "<<n<<std::endl;
 	containsSet = EMPTY;
 	longestCycleSize = 0;
@@ -43,6 +43,7 @@ int computeLongestCycleAndCountThem(bitset* graph, const int n, int* longestCycl
 		}
 	}
 	std::copy(longestCycle, longestCycle + longestCycleSize, longestCycleResult);
+	length = longestCycleSize;
 	return numberOfCycles;
 }
 void initializeLongestCycle(bitset graph[], const int n){

@@ -69,11 +69,10 @@ int main(int argc, char* argv[]) {
             //      std::cout << graph[i] <<" ";
             // }
             // std::cout << std::endl;
-            computeLongestCycleAndCountThem(graph, n, cycle);
             int cycle_length = 0;
-            while (cycle_length < 64 && cycle[cycle_length] != -1) {
-                ++cycle_length;
-            }
+
+            computeLongestCycleAndCountThem(graph, n, cycle, cycle_length);
+
             // std::cout << cycle_length <<std::endl;
             if (cycle_length != n) {
                 ++failed;

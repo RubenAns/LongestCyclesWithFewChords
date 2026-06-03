@@ -21,5 +21,5 @@ Run
     .\test_count_chords data\hamiltonian.txt  or .\test_hamiltonian data\hamiltonian_sorted.txt
 
 Notes
-    Each test has the options --method Bitset and --method Matrix to select the prefered graph representation. Bitset is selected by default.
+    test_hamiltonian and test_longestpath has the options --method Bitset and --method Matrix to select the prefered graph representation. Bitset is selected by default.
     Each test also has the option to specify --n <number> to restrict the number of test cases to the first <number> of lines in the specified file.

@@ -5,8 +5,8 @@
 #include <string>
 #include <stdexcept>
 
-#include "GraphAPI.hpp"
-#include "ComputeLongestCycle_copy.hpp"
+#include "ReadGraph.hpp"
+#include "ComputeLongestCycleAndCountThem.hpp"
 
 int main(int argc, char **argv)
 {
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
             {
                 std::vector<std::vector<int>> matrix;
                 loadGraphMatrix(g, n, matrix);
-                cyc = computeLongestCycle(matrix);
+                computeLongestCycleMatrix(matrix, cyc);
                 cycle_length = (int)cyc.size() - 1;
             }
             else
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
                 //     std::cout<<graph[i] << ", ";
                 // }
                 // std::cout<<std::endl;
-                cycle_length = computeLongestCycle_copy(graph, n, cyc2);
+                computeLongestCycleAndCountThem(graph, n, cyc2, cycle_length);
             }
             if (cycle_length != expected)
             {

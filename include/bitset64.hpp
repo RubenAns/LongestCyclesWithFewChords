@@ -53,5 +53,9 @@ typedef uint64_t bitset;
 //	E.g.: complement of {0,2} if there are only 4 elements is {1,3} and not 64-bit complement. 
 #define complement(set, sizeOfUniverse) (~(set) << (64-(sizeOfUniverse)) >> (64-(sizeOfUniverse)))
 
+// Unsafe because no defined behaviour if character = 0. ctz and clz work with 32 bit numbers.
+#define unsafePrev(character, current) (__builtin_ctz(character) - current >= 0 ? -1 : current -__builtin_clz((character) << (32 - current)) - 1)
+
+#define prev(character,current) (character ? unsafePrev(character,current) : -1)
 
 #endif

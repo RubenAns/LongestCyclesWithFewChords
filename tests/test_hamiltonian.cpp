@@ -6,8 +6,8 @@
 #include <stdexcept>
 
 // Project headers
-#include "GraphAPI.hpp"
-#include "ComputeLongestCycle_copy.hpp"
+#include "ReadGraph.hpp"
+#include "ComputeLongestCycleAndCountThem.hpp"
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
@@ -16,7 +16,6 @@ int main(int argc, char* argv[]) {
     }
     int upper_bound = 200;
     bool methodIsMatrix=true;
-    std::cout << argc;
     for (int i = 2; i < argc; ++i)
     {
         std::string arg = argv[i];
@@ -52,14 +51,14 @@ int main(int argc, char* argv[]) {
             if (methodIsMatrix){
                 std::vector<std::vector<int>> matrix;
                 loadGraphMatrix(line, n, matrix);
-                cyc = computeLongestCycle(matrix);
+                computeLongestCycleMatrix(matrix, cyc);
                 cycle_length = (int)cyc.size() - 1;
             }
             else{
                 bitset graph[64];
                 std::cout << "\"" << line << "end\"" << std::endl;
                 loadGraphBitset(line ,n, graph);
-                cycle_length = computeLongestCycle_copy(graph, n, cyc2);
+                computeLongestCycleAndCountThem(graph, n, cyc2, cycle_length);
             }
              // cycle contains repeated start at end in this impl
             if (cycle_length != n) {

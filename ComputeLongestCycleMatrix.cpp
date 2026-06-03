@@ -1,4 +1,4 @@
-#include "ComputeLongestCycle.hpp"
+#include "ComputeLongestCycleAndCountThem.hpp"
 #include <iostream>
 #include <vector>
 #include <array>
@@ -9,6 +9,7 @@ using namespace std;
 static std::vector<int> currentCycle = {};
 static std::vector<int> longestCylce;
 static int longestCycleSize;
+int numberOfCycles = 0;
 
 static int lastVertex = -1;
 static int firstVertex = -1;
@@ -27,7 +28,7 @@ ostream& operator<<(ostream& os,
 
 void computeLongestCycleRec(std::vector< std::vector<int>>& graph, const int n); // Add this function declaration before its first use
 
-std::vector<int> computeLongestCycle(std::vector< std::vector<int>>& graph) {
+int computeLongestCycleMatrix(std::vector< std::vector<int>>& graph, std::vector<int>& longestCycleReturn) {
 	const int n = graph.size();
 	contains.assign(n,0);
 	longestCycleSize = 0;
@@ -41,7 +42,8 @@ std::vector<int> computeLongestCycle(std::vector< std::vector<int>>& graph) {
 			break;
 		}
 	}
-	return longestCylce;
+	longestCycleReturn = longestCylce;
+	return numberOfCycles;
 }
 
 void computeLongestCycleRec(std::vector< std::vector<int>>& graph, const int n){
@@ -54,12 +56,14 @@ void computeLongestCycleRec(std::vector< std::vector<int>>& graph, const int n){
 			if (i == firstVertex) //maybe remove and, cause thats 2 checks for just a size of size 2, so for efficiency purpouses
 			{
 				//cycle completed
-				if (currentCycle.size() > longestCycleSize && currentCycle.size()>2) {
+				if ((int) currentCycle.size() > longestCycleSize && currentCycle.size()>2) {
 					//update longest
 					longestCylce = currentCycle;
 					longestCylce.push_back(i);
 					longestCycleSize = longestCylce.size()-1;
+					numberOfCycles = 0;
 				}
+				if ((int) currentCycle.size() == longestCycleSize) numberOfCycles++;
 				// std::cout << currentCycle <<  i <<endl;
 			}
 			else {
@@ -88,7 +92,7 @@ vector<vector<int>> graph = {{0, 1, 1, 1, 1},
 		{1, 1, 1, 0,1},
 		{1, 1, 1, 1, 0}};
 
-	auto cylce = computeLongestCycle(graph);
+	auto cylce = computeLongestCycleMatrix(graph);
 	std::cout << "Longest cycle: " << cylce.size()-1 << std::endl;
 	std::cout << cylce << std::endl;
 	return 0;

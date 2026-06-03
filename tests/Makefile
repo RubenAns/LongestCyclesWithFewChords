@@ -1,7 +1,7 @@
 CXX ?= g++
 MODE ?= release
 
-SRCDIR := ../src
+SRCDIR := ..
 INCDIR := ../include
 
 ifeq ($(MODE),debug)
@@ -10,7 +10,7 @@ else
 CXXFLAGS ?= -std=c++17   -I$(INCDIR) -Wall -Wextra -O3 -DNDEBUG
 endif
 
-SOURCES = $(SRCDIR)/ReadGraphMatrix.cpp $(SRCDIR)/ReadGraphBitset.cpp $(SRCDIR)/ComputeLongestCycleMatrix.cpp $(SRCDIR)/ComputeLongestCycleBitset.cpp $(SRCDIR)/ComputeLongestCycleBitset_better.cpp $(SRCDIR)/CountChordsBitset.cpp
+SOURCES = $(SRCDIR)/ReadGraphMatrix.cpp $(SRCDIR)/ReadGraphBitset.cpp $(SRCDIR)/ComputeLongestCycleMatrix.cpp  $(SRCDIR)/CountChordsBitset.cpp  $(SRCDIR)/ComputeLongestCycleAndCountThem.cpp
 
 EXES = test_hamiltonian$(EXE_EXT) test_longestpath$(EXE_EXT) test_compare$(EXE_EXT) test_count_chords$(EXE_EXT)
 

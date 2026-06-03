@@ -7,9 +7,9 @@
 #include <stdexcept>
 #include <chrono>
 
-#include "GraphAPI.hpp"
+#include "ReadGraph.hpp"
 #include "bitset64.hpp"
-#include "ComputeLongestCycle_copy.hpp"
+#include "ComputeLongestCycleAndCountThem.hpp"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -115,7 +115,7 @@ int main(int argc, char** argv) {
 
             // Time our implementation
             auto s1 = std::chrono::steady_clock::now();
-            int my_num_cycles = computeLongestCycle_copy(graph, n, cyc2);
+            int my_num_cycles = computeLongestCycleAndCountThem(graph, n, cyc2);
             auto e1 = std::chrono::steady_clock::now();
             t_accum_mine += (e1 - s1);
 

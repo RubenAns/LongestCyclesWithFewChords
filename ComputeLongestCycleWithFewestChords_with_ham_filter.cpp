@@ -1,19 +1,19 @@
-#include "ComputeLongestCycle_copy.hpp"
+// #include "ComputeLongestCycle_copy.hpp"
 #include <iostream>
 #include <cstring>
 #include "bitset64.hpp"
 #include <cassert>
 #include "CountChords.hpp"
-#include "GraphAPI.hpp"
+// #include "GraphAPI.hpp"
 using namespace std;
 #define maxVertices 64
 
 
-static int currentCycle[maxVertices]; //gebruik pointers en arrays, zie via profiler met const max_int
+static int currentCycle[maxVertices]; 
 static int currentCycleSize;
 static int longestCycle[maxVertices];
 static int longestCycleSize = 0;
-static int numberOfChords = 0;
+static int numberOfCycles = 0;
 
 static int lastVertex = -1;
 static int recentVertex = -1;
@@ -27,20 +27,21 @@ void printArray(const int* array, const int size) {
 	std::cout<<std::endl;
 }
 
-void computeLongestCycleRec(bitset graph[], const int n); // Add this function declaration before its first use
-void initializeLongestCycle(bitset graph[], const int n);
-
-
+void computeLongestCycleRec(bitset graph[], const int n);
+void initializeLongestCycleAndFind(bitset graph[], const int n);
 
 int computeLongestCycleWithFewestChordsWithHamFilter(bitset* graph, const int n, int* longestCycleResult) {
-	// std::cout<<"input = " << graph[0]<<", "<< graph[1] <<", n= "<<n<<std::endl;
 	containsSet = EMPTY;
 	longestCycleSize = 0;
 	for (int i = 0; i < n; i++)
 	{
+		/*Iterate from smallest to largest vertex: 
+		start by trying to find a longest cycle containing vertex 0, then one containing vertex 1 but not 0, etc*/
 		smallestVertex = i;
-		initializeLongestCycle(graph,n);
-		// std::cout << "iteratie number: " << i << std::endl;
+		initializeLongestCycleAndFind(graph,n);
+
+		/*If we have found a cycle of length L and next iteration we will remove the first i+1 vertices from our searchspace,
+		we can only find cycles of length n-(i+1)*/
 		if (n - (i + 1) < longestCycleSize) {
 			break;
 		}
@@ -48,103 +49,70 @@ int computeLongestCycleWithFewestChordsWithHamFilter(bitset* graph, const int n,
 	std::copy(longestCycle, longestCycle + longestCycleSize, longestCycleResult);
 	return longestCycleSize;
 }
-void initializeLongestCycle(bitset graph[], const int n){
+void initializeLongestCycleAndFind(bitset graph[], const int n){
 	currentCycle[1] = smallestVertex;
 	forEachAfterIndex(i, graph[smallestVertex], smallestVertex){
 		forEachAfterIndex(j, graph[smallestVertex], i){
 			recentVertex = i;
 			lastVertex = j;
-			// std::cout << "i: " << recentVertex << ", j: " << lastVertex << std::endl;
 			currentCycle[0] = lastVertex;
 			currentCycle[2] = recentVertex;
-			// printArray(currentCycle,4);
 			add(containsSet,recentVertex);
 			add(containsSet,smallestVertex);
-			//!! do not add lastVertex, or we will never complete the cycle!!
+			/*We do not add the lastVertex to the containsSet, such that later, we could still detect if we can add this vertex and complete the cycle */
+			
 			currentCycleSize = 3;
 			computeLongestCycleRec(graph,n);
-			if (longestCycleSize == n) {return;} //hamiltionian cycle found
+			if (longestCycleSize == n) return; //hamiltionian cycle found
 			removeElement(containsSet, j);
 		}
 		removeElement(containsSet, i);
-
 	}
 }
 
 void computeLongestCycleRec(bitset graph[], const int n){
-	if (longestCycleSize == n) {return;} //hamiltionian cycle found
-	//loop over all possible nodes connected by an edge but not yet contained
-	forEachAfterIndex(i, difference(graph[recentVertex], containsSet ), smallestVertex) //containsSet[lastVertex]=0 always!
-	{	
-		// std::cout << "now trying node " << i << " with current size = " << currentCycleSize << " with last vertex = " << lastVertex<< std::endl;
-		// printArray(currentCycle,currentCycleSize);		
-		assert(((1<<i) & graph[recentVertex] )!= 0);
-		if (i == lastVertex) 
+	if (longestCycleSize == n) return; //hamiltionian cycle found
+
+	/*extend the path by any vertex 
+	- connected to the recently added vertex (the end of the current path)
+	- not yet in the path (or our last vertex) 
+	- bigger in index than the starting vertex */
+	forEachAfterIndex(i, difference(graph[recentVertex], containsSet ), smallestVertex) //reminder: containsSet[lastVertex]=0 always!
+	{		
+		if (i == lastVertex)  /*the cycle is complete*/
 			{
-				//cycle completed
+				/*LONGER CYCLE FOUND*/
 				if (currentCycleSize > longestCycleSize) {
 					std::copy(currentCycle, currentCycle + currentCycleSize, longestCycle);
 					longestCycleSize = currentCycleSize;
-					numberOfChords = countChords(graph, n, longestCycle, longestCycleSize);
+					numberOfCycles = countChords(graph, currentCycle, longestCycleSize);
 
-					// printArray(longestCycle, longestCycleSize);
-					// std::cout << "longesCycleSize = " << longestCycleSize << std::endl;
 					if (currentCycleSize == n) {
-						//graph is hamiltonian, too many chords
-						// printArray(longestCycle,n+1);
-						// std::cout << "Graph is Hamiltonian, skipping further search." << std::endl;
+						/*graph is hamiltonian, not interesting for us*/
 						longestCycleSize = n;
-						numberOfChords = 10e8;
+						numberOfCycles = 10e8; //big unrealistic number
 						return;
 					}
 				}
+				/*EQUALLY LONG CYCLE FOUND WITH POTENTIALLY LESS CHORDS*/
 				if (currentCycleSize == longestCycleSize){
-					int numberOfChords2 = countChords(graph, n, currentCycle, longestCycleSize);
-					if (numberOfChords2 < numberOfChords){
-						numberOfChords = numberOfChords2;
+					int numberOfChords2 = countChords(graph, currentCycle, longestCycleSize);
+					if (numberOfChords2 < numberOfCycles){
+						numberOfCycles = numberOfChords2;
 						std::copy(currentCycle, currentCycle + currentCycleSize, longestCycle);
 					}
-					// std::cout << numberOfChords2 << ": ";
-					// printArray(longestCycle, longestCycleSize);
-					
-
 				}
 			}
-		else {
-				//extend with selected vertex
+		else { /*Not a cycle, but extend the path and recurse*/
 				add(containsSet,i);
 				currentCycle[currentCycleSize++]=i;
 				recentVertex = i;
 				computeLongestCycleRec(graph,n);
 				removeElement(containsSet, i);
 				recentVertex = currentCycle[currentCycleSize-2];
-				currentCycleSize--;
+				currentCycleSize--; //note that the last vertex in currentCycle is not deleted, but only the size is decreased
 			}
 		}
 	}
 	
-
-
-	
-	
-
-#ifdef TEST_HELPER
-int main() {
-	//F?lv_
-//  bitset graph[] = {14LL, 13LL, 11LL, 7LL};
-	bitset graph[8];
-    std::cout<<8<<std::endl;
-	int n=8;
-    loadGraphBitset("Gs@ipo", n, graph);
-	// bitset graph[] = {80, 96, 112, 112, 13, 14, 15};
-	int result[8];
-	int cycleLength = computeLongestCycleWithFewestChords(graph,n,result);
-	printArray(result, 8);
-	std::cout << "Longest cycle: " << std::endl;
-	std::cout << cycleLength << std::endl;
-	std::cout << numberOfLongestCycles << std::endl;
-	return 0;
-}
-#endif
-
 

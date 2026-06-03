@@ -6,8 +6,8 @@
 #include <stdexcept>
 
 // Project headers
-#include "GraphAPI.hpp"
-#include "ComputeLongestCycle_copy.hpp"
+#include "ReadGraph.hpp"
+#include "ComputeLongestCycleAndCountThem.hpp"
 #include "CountChords.hpp"
 
 int main(int argc, char* argv[]) {
@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
             //      std::cout << graph[i] <<" ";
             // }
             // std::cout << std::endl;
-            computeLongestCycle_copy(graph, n, cycle);
+            computeLongestCycleAndCountThem(graph, n, cycle);
             int cycle_length = 0;
             while (cycle_length < 64 && cycle[cycle_length] != -1) {
                 ++cycle_length;
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
                           << " - Not Hamiltonian (cycle length=" << cycle_length << ", |V|=" << n << ")\n";
             } else {
                 // Count actual chords
-                int actual_chords = countChords(graph, n, cycle, cycle_length);
+                int actual_chords = countChords(graph, cycle, cycle_length);
                 
                 if (actual_chords != expected_chords) {
                     ++failed;

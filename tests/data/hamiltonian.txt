@@ -1,6 +1,5 @@
 # Example Hamiltonian graphs in graph6 format
 # Add one graph6 per line (without comments)
-M?`@E`gFC?EO@A?a_
 FqN~w
 C^
 F}lzw

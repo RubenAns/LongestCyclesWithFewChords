@@ -7,7 +7,7 @@
 
 #define MAXVERTICES 64
 
-void loadGraphBitset(std::string graphString, int numberOfVertices, bitset adjacencyList[]) { //Support only up to 128 vertices. (Select right option in bitset.h! Lower is faster.)
+void loadGraphBitset(std::string graphString, int numberOfVertices, bitset adjacencyList[]) { //Support only up to 128 vertices.
 	int startIndex = 0;
 	if (graphString[startIndex] == '>') { // Skip >>graph6<< header.
 		startIndex += 10;
@@ -45,7 +45,7 @@ void loadGraphBitset(std::string graphString, int numberOfVertices, bitset adjac
 
 }
 #ifdef TEST_HELPER
-
+//This code is meant as a test of this class and does not add any functionality
  int main(int argc, char *argv[]) {
  	// Read graph string from command-line argument when executing the program.
  	// If no argument is provided, fall back to the default graph string "C~".

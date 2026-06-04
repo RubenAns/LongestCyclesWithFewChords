@@ -26,7 +26,7 @@ ostream& operator<<(ostream& os,
 	return os;
 }
 
-void computeLongestCycleRec(std::vector< std::vector<int>>& graph, const int n); // Add this function declaration before its first use
+void computeLongestCycleRec(std::vector< std::vector<int>>& graph, const int n); 
 
 int computeLongestCycleMatrix(std::vector< std::vector<int>>& graph, std::vector<int>& longestCycleReturn) {
 	const int n = graph.size();
@@ -53,7 +53,7 @@ void computeLongestCycleRec(std::vector< std::vector<int>>& graph, const int n){
 
 		if (graph[lastVertex][i] == 1 && contains[i] == 0) //contains[firstvertex]=0 always!
 		{
-			if (i == firstVertex) //maybe remove and, cause thats 2 checks for just a size of size 2, so for efficiency purpouses
+			if (i == firstVertex)
 			{
 				//cycle completed
 				if ((int) currentCycle.size() > longestCycleSize && currentCycle.size()>2) {
@@ -64,7 +64,6 @@ void computeLongestCycleRec(std::vector< std::vector<int>>& graph, const int n){
 					numberOfCycles = 0;
 				}
 				if ((int) currentCycle.size() == longestCycleSize) numberOfCycles++;
-				// std::cout << currentCycle <<  i <<endl;
 			}
 			else {
 				//extend with selected vertex
@@ -77,14 +76,11 @@ void computeLongestCycleRec(std::vector< std::vector<int>>& graph, const int n){
 				lastVertex = currentCycle.back();
 			}
 		}
-	}
-	
-
-
-	
-	}
+	}	
+}
 
 #ifdef TEST_HELPER
+//This code is meant as a test of this class and does not add any functionality
 int main() {
 vector<vector<int>> graph = {{0, 1, 1, 1, 1},
 		{1, 0, 1, 1,1},

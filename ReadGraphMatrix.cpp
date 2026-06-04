@@ -3,10 +3,6 @@
 #include <string>
 #include <iostream>
 
-#define unsafePrev(character, current) (__builtin_ctz(character) - current >= 0 ? -1 : current -__builtin_clz((character) << (32 - current)) - 1)
-
-#define prev(character,current) (character ? unsafePrev(character,current) : -1)
-
 using namespace std;
 
 const int nb_bits=4096;
@@ -72,6 +68,7 @@ void loadGraphMatrix(string graphString, int numberOfVertices, vector<vector<int
 }
 
 #ifdef TEST_HELPER
+//This code is meant as a test of this class and does not add any functionality
 int main()
 {
     cout << "input your graph:" << endl;

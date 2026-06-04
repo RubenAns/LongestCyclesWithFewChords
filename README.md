@@ -3,7 +3,11 @@ This is the code for my thesis "Longest cycles with few chords in 3-connected gr
 
 
 ## Compiling
-The code can simply be compiled by executing the "make" command in this directory. To compile the tests, run the "make" command in the ./tests directory.
+The code can simply be compiled by executing the 
+```
+make
+```
+command in this directory. To compile the tests, run the "make" command in the ./tests directory.
 
 ## Running
 To run the program, simply execute 

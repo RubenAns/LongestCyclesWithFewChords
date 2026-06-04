@@ -12,10 +12,10 @@ int main(int argc, char **argv)
 {
     if (argc < 2)
     {
-        std::cerr << "Usage: test_longestpath <file_with_graph6_and_expected>  [--method Bitset or Matrix (default)]\n";
+        std::cerr << "Usage: test_longestpath <file_with_graph6_and_expected>  [--method Bitset (default) or Matrix]\n";
         return 2;
     }
-    bool methodIsMatrix = true;
+    bool methodIsMatrix = false;
     for (int i = 2; i < argc; ++i)
     {
         std::string arg = argv[i];
@@ -23,8 +23,8 @@ int main(int argc, char **argv)
         if (arg == "--method" && i + 1 < argc)
         {
             std::string arg2 = argv[i + 1];
-            if (arg2 == "Bitset")
-                methodIsMatrix = false;
+            if (arg2 == "Matrix")
+                methodIsMatrix = true;
         }
     }
     std::cout << "using method Matrix?: " << methodIsMatrix << std::endl;

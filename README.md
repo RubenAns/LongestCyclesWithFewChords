@@ -21,7 +21,7 @@ EC^w 5 2 [5 0 3 4 1 ]
 ```
 Here, the first term is the graph6 representation of the graph, the second term is the circumference of the graph, i.e. the length of the longest cycle. The third term indicates how many chords the longest cycle with fewest chords has, and lastly that longest cycle with minimal chords is given.
 
-Equivalently, and our recommendation, is to run 
+Alternatively, and our recommendation, is to run 
 ```
 ./find_min_chord_cycle_with_ham_filter < graphs.g6
 ```
